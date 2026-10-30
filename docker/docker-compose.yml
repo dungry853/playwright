@@ -1,0 +1,42 @@
+name: playwright
+
+# Shared settings for every service below.
+x-playwright: &playwright
+  build:
+    context: ..
+    dockerfile: docker/Dockerfile
+    args:
+      PLAYWRIGHT_VERSION: ${PLAYWRIGHT_VERSION:-1.64.1}
+      PLAYWRIGHT_CLI_VERSION: ${PLAYWRIGHT_CLI_VERSION:-latest}
+  image: playwright-tests:${PLAYWRIGHT_VERSION:-1.64.1}
+  working_dir: /workspace
+  init: true
+  ipc: host # prevents Chromium crashes from low shared memory
+  env_file:
+    - path: ../.env # BASE_URL, CI, ... (project root); optional
+      required: false
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+  volumes:
+    - ..:/workspace
+    - node_modules:/workspace/node_modules
+    - npm_cache:/root/.npm
+
+services:
+  # Interactive shell:  docker compose run --rm playwright
+  playwright:
+    <<: *playwright
+    stdin_open: true
+    tty: true
+    ports:
+      - "9323:9323" # npx playwright show-report --host 0.0.0.0
+
+  # One-shot test run:  docker compose --profile test run --rm test
+  test:
+    <<: *playwright
+    profiles: ["test"]
+    command: ["npx", "playwright", "test"]
+
+volumes:
+  node_modules:
+  npm_cache:
