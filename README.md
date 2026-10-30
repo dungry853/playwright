@@ -22,8 +22,9 @@ End-to-end test project built with [Playwright](https://playwright.dev/) and Typ
   - [Playwright CLI](#playwright-cli)
     - [`scripts/pw.cmd`](#scriptspwcmd)
   - [Playwright Agents](#playwright-agents)
-    - [Initialize](#initialize)
-    - [Suggested workflow](#suggested-workflow)
+  - [Initialize AI Agents](#initialize-ai-agents)
+    - [1. Initialize Playwright Test Agents](#1-initialize-playwright-test-agents)
+    - [2. Install Playwright CLI Skills](#2-install-playwright-cli-skills)
   - [Writing Tests](#writing-tests)
     - [Conventions](#conventions)
   - [Reports \& Debugging](#reports--debugging)
@@ -120,6 +121,8 @@ Optional: add a shortcut for the long command.
 ```bash
 # macOS / Linux / Git Bash
 alias dcp='docker compose -f docker/docker-compose.yml'
+# Window
+alias dcp=docker compose -f docker/docker-compose.yml $*
 ```
 
 The examples below use `dcp` as shorthand for the full command.
@@ -281,26 +284,40 @@ Playwright Test Agents provide three roles:
 | Generator | Turns the plan into Playwright test files |
 | Healer | Runs tests and repairs failing ones |
 
-### Initialize
+
+## Initialize AI Agents
+
+### 1. Initialize Playwright Test Agents
+
+Generate agent definitions for your preferred AI coding tool.
+Supported AI tools:
 
 ```bash
-npm run agents:init
-# or choose your AI tool explicitly:
 npx playwright init-agents --loop=vscode
 npx playwright init-agents --loop=claude
 npx playwright init-agents --loop=opencode
 ```
 
-Run `npx playwright init-agents --help` to confirm the options for your version. The command generates agent definition files in the repository. Commit them if you want the whole team to share them, and re-run `init-agents` after upgrading Playwright to refresh the definitions.
+Run the following command to see all available options:
 
-### Suggested workflow
+```bash
+npx playwright init-agents --help
+```
 
-1. Make sure the app is running and `BASE_URL` is reachable.
-2. Ask the **Planner** for a test plan of the flow you want covered.
-3. Ask the **Generator** to create `tests/*.spec.ts` from the plan.
-4. Run `npm test`.
-5. If tests fail, ask the **Healer** to fix them.
-6. Review all agent-generated code before committing.
+### 2. Install Playwright CLI Skills
+
+Install the official Playwright CLI skill for AI coding agents.
+
+```bash
+playwright-cli install --skills=agents
+```
+
+The skill provides instructions for browser automation using Playwright CLI.
+
+**Notes:**
+- Run commands from the project root.
+- Commit generated agent definitions and skills to share them with your team.
+- Re-run `agents:init` after upgrading Playwright to refresh agent definitions.
 
 ## Writing Tests
 
