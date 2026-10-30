@@ -95,7 +95,6 @@ playwright/
 
 ```bash
 git clone <repo-url>
-cd playwright
 ```
 
 **2. Create the environment file**
