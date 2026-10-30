@@ -127,7 +127,18 @@ alias dcp=docker compose -f docker/docker-compose.yml $*
 
 The examples below use `dcp` as shorthand for the full command.
 
-**4. Open a shell in the container**
+
+**4. Install dependencies on Windows (Optional)**
+
+If you use VS Code or another IDE on Windows and want IntelliSense, TypeScript autocompletion, and code navigation, install dependencies locally:
+
+```bash
+npm ci
+```
+
+> This step is optional and only needed for IDE support. Tests still run inside Docker, where dependencies are managed separately.
+
+**5. Open a shell in the container**
 
 ```bash
 dcp run --rm playwright
@@ -135,7 +146,7 @@ dcp run --rm playwright
 
 You are now in `/workspace`, which is your project folder mounted into the container. On the first start, the entrypoint runs `npm ci` automatically, so there is **no manual install step**.
 
-**5. Type-check and run the tests**
+**6. Type-check and run the tests**
 
 ```bash
 npm run typecheck
