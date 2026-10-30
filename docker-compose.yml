@@ -1,0 +1,40 @@
+services:
+  playwright:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PLAYWRIGHT_VERSION: ${PLAYWRIGHT_VERSION:-1.64.1}
+        INSTALL_CLAUDE: ${INSTALL_CLAUDE:-false}
+        INSTALL_OPENCODE: ${INSTALL_OPENCODE:-false}
+
+    container_name: playwright-agent
+    working_dir: /workspace
+    init: true
+    stdin_open: true
+    tty: true
+
+    environment:
+      BASE_URL: ${DOCKER_BASE_URL:-http://host.docker.internal:8000}
+      PLAYWRIGHT_VERSION: ${PLAYWRIGHT_VERSION:-1.64.1}
+      INSTALL_CLAUDE: ${INSTALL_CLAUDE:-false}
+      INSTALL_OPENCODE: ${INSTALL_OPENCODE:-false}
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    volumes:
+      - .:/workspace
+      - playwright_node_modules:/workspace/node_modules
+      - agent_config:/root/.config
+      - agent_data:/root/.local/share
+      - agent_state:/root/.local/state
+
+    command: bash
+
+volumes:
+  playwright_node_modules:
+  agent_config:
+  agent_data:
+  agent_state:
